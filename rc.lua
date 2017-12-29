@@ -469,7 +469,7 @@ globalkeys = gears.table.join(
     awful.key(
         { modkey }, "d",
         
-        function () awful.spawn.with_shell("rofi -show run") end,
+        function () awful.spawn.with_shell("rofi -show drun") end,
         { description = "run rofi", group = "launcher" }
     ),
 
