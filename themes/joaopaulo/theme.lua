@@ -42,7 +42,6 @@ theme.systray_icon_spacing = dpi(4)
 
 -- Define the icon theme for application icons. If not set then the icons
 -- from /usr/share/icons and /usr/share/icons/hicolor will be used.
-theme.icon_theme = "Arc"
 theme.wallpaper = "~/.config/awesome/awesome-wallpaper.png"
 
 return theme

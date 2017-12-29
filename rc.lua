@@ -4,7 +4,6 @@ local awful = require("awful")
 local wibox = require("wibox")
 local beautiful = require("beautiful")
 local naughty = require("naughty")
-local menubar = require("menubar")
 local hotkeys_popup = require("awful.hotkeys_popup").widget
 local common = require("awful.widget.common")
 local cyclefocus = require('extras/cyclefocus')
@@ -95,10 +94,6 @@ mymainmenu = awful.menu({
         { "open terminal", terminal }
     }
 })
-
--- Menubar configuration
-menubar.utils.terminal = terminal
-menubar.icon_theme_name = "Numix Square"
 
 -- Keyboard Layout
 mykeyboardlayout = awful.widget.keyboardlayout()
@@ -246,9 +241,6 @@ awful.screen.connect_for_each_screen(
             end
         end
 
-        -- Create a promptbox for each screen
-        s.mypromptbox = awful.widget.prompt()
-
         -- Create a taglist widget
         s.mytaglist = awful.widget.taglist(s, awful.widget.taglist.filter.all, taglist_buttons)
 
@@ -260,7 +252,6 @@ awful.screen.connect_for_each_screen(
 
         -- Left Layout
         left_layout:add(s.mytaglist)
-        left_layout:add(s.mypromptbox)
 
         -- Center Layout        
         center_layout:add(s.mytasklist)
@@ -476,31 +467,10 @@ globalkeys = gears.table.join(
     ),
 
     awful.key(
-        { modkey }, "r",
+        { modkey }, "d",
         
-        function () awful.screen.focused().mypromptbox:run() end,
-        { description = "run prompt", group = "launcher" }
-    ),
-
-    awful.key(
-        { modkey }, "x",
-
-        function ()
-            awful.prompt.run {
-                prompt       = "Run Lua code: ",
-                textbox      = awful.screen.focused().mypromptbox.widget,
-                exe_callback = awful.util.eval,
-                history_path = awful.util.get_cache_dir() .. "/history_eval"
-            }
-        end,
-        { description = "lua execute prompt", group = "awesome" }
-    ),
-
-    awful.key(
-        { modkey }, "p",
-        
-        function() menubar.show() end,
-        { description = "show the menubar", group = "launcher" }
+        function () awful.spawn.with_shell("rofi -show run") end,
+        { description = "run rofi", group = "launcher" }
     ),
 
     -- Personal
