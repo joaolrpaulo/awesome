@@ -7,7 +7,12 @@ local naughty = require("naughty")
 local hotkeys_popup = require("awful.hotkeys_popup").widget
 local common = require("awful.widget.common")
 local cyclefocus = require('extras/cyclefocus')
-local volume_control = require("extras/volume-control")
+local spotify_widget = require("awesome-wm-widgets.spotify-widget.spotify")
+local weather_widget = require("awesome-wm-widgets.weather-widget.weather")
+local volume_widget = require("awesome-wm-widgets.volume-widget.volume")
+local ram_widget = require("awesome-wm-widgets.ram-widget.ram-widget")
+local cpu_widget = require("awesome-wm-widgets.cpu-widget.cpu-widget")
+local calendar = require("calendar")
 
 require("awful.autofocus")
 require("awful.hotkeys_popup.keys")
@@ -101,7 +106,6 @@ mykeyboardlayout = awful.widget.keyboardlayout()
 -- Wibar
 -- Create a textclock widget
 mytextclock = wibox.widget.textclock()
-volumecfg = volume_control({ tooltip = true })
 
 -- Create a wibox for each screen and add it
 local taglist_buttons =
@@ -208,6 +212,9 @@ end
 -- Re-set wallpaper when a screen's geometry changes (e.g. different resolution)
 screen.connect_signal("property::geometry", set_wallpaper)
 
+-- Set the calendar
+calendar({}):attach(mytextclock)
+
 awful.screen.connect_for_each_screen(
     function(s)
         local left_layout   = wibox.layout.fixed.horizontal()
@@ -221,23 +228,23 @@ awful.screen.connect_for_each_screen(
 
         -- Each screen has its own tag table.                            
         if screen.count() == 1 then
-            awful.tag({ "IntelliJ", "Web", "Terminal", "HipChat", "Telegram", "Spotify", "Aux", "Aux", "Aux" }, s, awful.layout.layouts[1])
+            awful.tag({ "1", "2", "3", "4", "5", "6", "7", "8", "9" }, s, awful.layout.layouts[1])
         
         elseif screen.count() == 2 then
             if s.index == 1 then
-                awful.tag({ "IntelliJ", "Web", "Spotify" }, s, awful.layout.layouts[1])
+                awful.tag({ "1", "2", "3" }, s, awful.layout.layouts[1])
             elseif s.index == 2 then
-                awful.tag({ "Terminal", "HipChat", "Telegram" }, s, awful.layout.layouts[1])
+                awful.tag({ "4", "5", "6" }, s, awful.layout.layouts[1])
             end
         
         elseif screen.count() == 3 then
             -- Each screen has its own tag table.            
             if s.index == 1 then
-                awful.tag({ "IntelliJ", "Code", "Aux" }, s, awful.layout.layouts[1])
+                awful.tag({ "1", "2", "3" }, s, awful.layout.layouts[1])
             elseif s.index == 2 then
-                awful.tag({ "Terminal", "HipChat", "Telegram" }, s, awful.layout.layouts[1])
+                awful.tag({ "4", "5", "6" }, s, awful.layout.layouts[1])
             elseif s.index == 3 then
-                awful.tag({ "Web", "Spotify", "Aux"}, s, awful.layout.layouts[1])
+                awful.tag({ "7", "8", "9"}, s, awful.layout.layouts[1])
             end
         end
 
@@ -248,26 +255,30 @@ awful.screen.connect_for_each_screen(
         s.mytasklist = awful.widget.tasklist(s, awful.widget.tasklist.filter.currenttags, tasklist_buttons, nil, list_update, wibox.layout.flex.horizontal())
 
         -- Create the wibox
-        s.mywibox = awful.wibar({ position = "bottom", height = 25, screen = s })
+        s.mywibox = awful.wibar({ position = "top", height = 20, screen = s })
 
-        -- Left Layout
-        left_layout:add(s.mytaglist)
-
-        -- Center Layout        
-        center_layout:add(s.mytasklist)
-
-        -- Right Layout
-        right_layout:add(systray)
-        right_layout:add(mykeyboardlayout)
-        right_layout:add(volumecfg.widget)
-        right_layout:add(mytextclock)
-
-        -- Create the wibar
-        layout:set_left(left_layout)
-        layout:set_middle(center_layout)
-        layout:set_right(right_layout)
-        s.mywibox:set_widget(layout)
-        
+        s.mywibox:setup {
+            layout = wibox.layout.align.horizontal,
+            expand = "none",
+            {
+                -- Left Widgets
+                layout = wibox.layout.align.horizontal,
+                s.mytaglist
+            },
+            s.mytasklist,
+            {
+                spacing = 6,
+                -- Right Widgets
+                layout = wibox.layout.fixed.horizontal,
+                systray,
+                cpu_widget,
+                ram_widget,
+                volume_widget,
+                spotify_widget,
+                weather_widget,
+                mytextclock
+            },
+        }
     end
 )
 
@@ -766,7 +777,7 @@ awful.rules.rules = {
         },
         
         properties = {
-            titlebars_enabled = true
+            titlebars_enabled = false
         }
     },
 }

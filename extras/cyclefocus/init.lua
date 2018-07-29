@@ -60,7 +60,7 @@ cyclefocus = {
         -- Default callback, which will gets applied for all offsets (first).
         default = function (preset, args)
             -- Default font and icon size (gets overwritten for current/0 index).
-            preset.font = 'sans 8'
+            preset.font = 'Play 9'
             preset.icon_size = 36
             preset.text = escape_markup(cyclefocus.get_client_title(args.client, false))
 
