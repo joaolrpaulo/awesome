@@ -52,6 +52,7 @@ end
 
 -- Theming
 beautiful.init(awful.util.getdir("config") .. "/themes/joaopaulo/theme.lua")
+beautiful.icon_theme = "Papirus-Dark"
 
 -- Envoriment variables
 terminal = "terminator"
@@ -236,11 +237,7 @@ calendar({}):attach(mytextclock)
 
 awful.screen.connect_for_each_screen(
     function (s)
-        local left_layout   = wibox.layout.fixed.horizontal()
-        local center_layout = wibox.layout.fixed.horizontal()
-        local right_layout  = wibox.layout.fixed.horizontal()
-        local layout        = wibox.layout.align.horizontal()
-        local systray       = wibox.layout.margin(wibox.widget.systray(), 3, 3, 3, 3)
+        local systray = wibox.layout.margin(wibox.widget.systray(), 3, 3, 3, 3)
 
         -- Wallpaper
         if beautiful.wallpaper then
@@ -255,7 +252,7 @@ awful.screen.connect_for_each_screen(
         end
 
         -- Each screen has its own tag table.                            
-        awful.tag({ "1", "2", "3", "4", "5", "6", "7", "8", "9" }, s, awful.layout.layouts[1])
+        awful.tag({ "web", "code", "term", "chat", "mail", "music" }, s, awful.layout.layouts[1])
         
         -- Create an imagebox widget which will contain an icon indicating which layout we're using.
         -- We need one layoutbox per screen.
@@ -273,11 +270,10 @@ awful.screen.connect_for_each_screen(
         s.mytasklist = awful.widget.tasklist(s, awful.widget.tasklist.filter.currenttags, tasklist_buttons, nil, list_update, wibox.layout.flex.horizontal())
 
         -- Create the wibox
-        s.mywibox = awful.wibar({ position = "top", height = 20, screen = s })
+        s.mywibox = awful.wibar({ position = "bottom", height = 20, screen = s })
 
         s.mywibox:setup {
             layout = wibox.layout.align.horizontal,
-            expand = "none",
             {
                 -- Left Widgets
                 layout = wibox.layout.align.horizontal,
@@ -288,19 +284,11 @@ awful.screen.connect_for_each_screen(
                 -- Right Widgets
                 layout = wibox.layout.fixed.horizontal,
                 wibox.container.margin(systray, 0, 5),
-                arrow(theme.bg_normal, "#4B696D"),
-                wibox.container.background(wibox.container.margin(wibox.widget { widgets.memicon, widgets.mem.widget, layout = wibox.layout.align.horizontal }, 2, 3), "#4B696D"),
-                arrow("#4B696D", "#4B3B51"),
-                wibox.container.background(wibox.container.margin(wibox.widget { widgets.cpuicon, widgets.cpu.widget, layout = wibox.layout.align.horizontal }, 3, 4), "#4B3B51"),
-                arrow("#4B3B51", "#CB755B"),
-                wibox.container.background(wibox.container.margin(wibox.widget { widgets.tempicon, widgets.temp.widget, layout = wibox.layout.align.horizontal }, 4, 4), "#CB755B"),
-                arrow("#CB755B", "#8DAA9A"),
-                wibox.container.background(wibox.container.margin(wibox.widget { widgets.baticon, widgets.bat.widget, layout = wibox.layout.align.horizontal }, 3, 3), "#8DAA9A"),
-                arrow("#8DAA9A", "#C0C0A2"),
-                wibox.container.background(wibox.container.margin(wibox.widget { widgets.neticon, widgets.net.widget, layout = wibox.layout.align.horizontal }, 3, 3), "#C0C0A2"),
-                arrow("#C0C0A2", "#777E76"),
-                wibox.container.background(wibox.container.margin(mytextclock, 2, 2), "#777E76"),
-                arrow("#777E76", "alpha"),
+                wibox.container.margin(widgets.mem.widget, 0, 5),
+                wibox.container.margin(widgets.cpu.widget, 0, 5),
+                wibox.container.margin(widgets.temp.widget, 0, 5),
+                wibox.container.margin(widgets.bat.widget, 0, 5),
+                mytextclock,
                 s.mylayoutbox
             },
         }
@@ -352,12 +340,6 @@ globalkeys = gears.table.join(
         { modkey }, "k",
         function () awful.client.focus.byidx(-1) end,
         { description = "focus previous by index", group = "client" }
-    ),
-
-    awful.key(
-        { modkey }, "w",
-        function () mymainmenu:show() end,
-        { description = "show main menu", group = "awesome" }
     ),
 
     -- Layout manipulation
@@ -474,8 +456,21 @@ globalkeys = gears.table.join(
 
     awful.key(
         { modkey }, "d",
-        function () awful.spawn.with_shell("rofi -show drun") end,
+        function () awful.spawn.with_shell("rofi -show drun -theme-str '#prompt { enabled: false; }'") end,
         { description = "run rofi", group = "launcher" }
+    ),
+
+    awful.key(
+        { modkey }, "w",
+        function () awful.spawn.with_shell("rofi -show window -theme-str '#prompt { enabled: false; }'") end,
+        { description = "run rofi window", group = "launcher" }
+    ),
+
+    awful.key(
+        { modkey, "Control" }, "s",
+        function ()
+            client.sticky = not client.sticky
+        end
     ),
 
     -- Personal
@@ -489,6 +484,19 @@ globalkeys = gears.table.join(
         { modkey }, "e",
         function () awful.util.spawn("thunar") end,
         { description = "launches thunar file manager", group = "personal" }
+    ),
+
+    -- Brigthness
+    awful.key(
+        { }, "XF86MonBrightnessUp",
+        function () awful.util.spawn("xbacklight -inc 10") end,
+        { description = "raises the brightness", group = "screen" }
+    ),
+
+    awful.key(
+        { }, "XF86MonBrightnessDown",
+        function () awful.util.spawn("xbacklight -dec 10") end,
+        { description = "raises the brightness", group = "screen" }
     ),
 
     -- Personal
@@ -798,7 +806,10 @@ client.connect_signal("request::titlebars",
         )
 
         awful.titlebar(c) : setup {
-            { layout  = wibox.layout.fixed.horizontal },
+            {
+                awful.titlebar.widget.iconwidget(c),
+                layout  = wibox.layout.fixed.horizontal
+            },
             {
                 { align  = "center", widget = awful.titlebar.widget.titlewidget(c) },
 
