@@ -16,7 +16,7 @@ local border_marked = "#CC9393"
 
 return {
     -- Font Properties
-    font                  = "Ahamono 7",
+    font                  = "Ahamono 8",
     icon_theme            = "Papirus-Dark",
 
     -- Theme colors

@@ -456,13 +456,13 @@ globalkeys = gears.table.join(
 
     awful.key(
         { modkey }, "d",
-        function () awful.spawn.with_shell("rofi -show drun -theme-str '#prompt { enabled: false; }'") end,
+        function () awful.spawn.with_shell("rofi -show drun -theme-str 'prompt,textbox-prompt-sep { enabled: false; }'") end,
         { description = "run rofi", group = "launcher" }
     ),
 
     awful.key(
         { modkey }, "w",
-        function () awful.spawn.with_shell("rofi -show window -theme-str '#prompt { enabled: false; }'") end,
+        function () awful.spawn.with_shell("rofi -show window -theme-str 'prompt,textbox-prompt-sep { enabled: false; }'") end,
         { description = "run rofi window", group = "launcher" }
     ),
 
