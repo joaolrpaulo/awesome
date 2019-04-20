@@ -13,6 +13,7 @@ local bg_urgent = "#34353488"
 local border_normal = "#3F3F3F"
 local border_focus = "#6F6F6F"
 local border_marked = "#CC9393"
+local taglist_square_size = dpi(4)
 
 return {
     -- Font Properties
@@ -68,8 +69,8 @@ return {
     layout_cornerse       = themes_path.."/layouts/cornersew.png",
 
     -- Taglist Icons
-    taglist_squares_sel   = themes_path .. "/taglist/squarefw.png",
-    taglist_squares_unsel = themes_path .. "/taglist/squarew.png",
+    taglist_squares_sel = theme_assets.taglist_squares_sel(taglist_square_size, fg_normal),
+    taglist_squares_unsel = theme_assets.taglist_squares_unsel(taglist_square_size, fg_normal),
 
     -- Gap between windows
     useless_gap           = dpi(0),
@@ -84,6 +85,7 @@ return {
 
     -- Systray
     systray_icon_spacing  = dpi(4),
+    taglist_square_size = dpi(1),
 
     -- Wallpaper
     wallpaper             = "~/.config/awesome/awesome-wallpaper.jpg"
