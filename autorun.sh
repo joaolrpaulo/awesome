@@ -1,21 +1,28 @@
 #!/usr/bin/env bash
 
+## run (only once) processes which spawn with the same name
 function run {
-  if ! pgrep $1 ;
-  then
-    $@&
-  fi
+   if (command -v $1 && ! pgrep $1); then
+     $@&
+   fi
 }
 
 function check-enpass {
     if [[ $( ps aux | grep Enpass | grep -v grep | wc -l ) == 0 ]]; then
-      run /opt/Enpass/bin/runenpass.sh
+      run /opt/enpass/Enpass
     fi
 }
 
-setxkbmap -layout us -variant mac
+# Boot every daemon
 run nm-applet
-run compton
+run compton --shadow-exclude '!focused'
 run xautolock -time 5 -locker "dm-tool lock"
+run thunar --daemon
+run blueman-applet
+run msm_notifier
+
+# Boot Enpass
 check-enpass
-xrandr --output HDMI-3 --off --output HDMI-2 --off --output HDMI-1 --off --output DP-7 --off --output DP-6 --off --output DP-5 --mode 2560x1440 --pos 5120x0 --rotate normal --output DP-4 --mode 2560x1440 --pos 0x0 --rotate normal --output DP-3 --mode 2560x1440 --pos 2560x0 --rotate normal --output DP-2 --off --output DP-1 --off
+
+# Set the keyoard layout
+setxkbmap -layout us -variant mac

@@ -7,9 +7,9 @@ local themes_path = os.getenv("HOME") .. "/.config/awesome/themes/joaopaulo"
 
 -- Most used colors
 local fg_normal = "#FFFFFF"
-local bg_normal = "#2E2E2E00"
-local bg_focus = "#484848"
-local bg_urgent = "#AC6E2f00"
+local bg_normal = "#434e2caa"
+local bg_focus = "#0c0d0c88"
+local bg_urgent = "#34353488"
 local border_normal = "#3F3F3F"
 local border_focus = "#6F6F6F"
 local border_marked = "#CC9393"
@@ -67,6 +67,10 @@ return {
     layout_cornersw       = themes_path.."/layouts/cornersww.png",
     layout_cornerse       = themes_path.."/layouts/cornersew.png",
 
+    -- Taglist Icons
+    taglist_squares_sel   = themes_path .. "/taglist/squarefw.png",
+    taglist_squares_unsel = themes_path .. "/taglist/squarew.png",
+
     -- Gap between windows
     useless_gap           = dpi(0),
     border_width          = dpi(0),
@@ -82,5 +86,5 @@ return {
     systray_icon_spacing  = dpi(4),
 
     -- Wallpaper
-    wallpaper             = "~/.config/awesome/awesome-wallpaper.png"
+    wallpaper             = "~/.config/awesome/awesome-wallpaper.jpg"
 }

@@ -1,1 +1,0 @@
-# Awesome WM Dotfiles
